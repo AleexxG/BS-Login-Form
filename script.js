@@ -6,7 +6,7 @@ let config = {
     },
 
     'korisnicko_ime': {
-        required: true,
+        required: true, 
         minlength: 5,
         maxlength: 50
     },

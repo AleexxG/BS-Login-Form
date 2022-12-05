@@ -33,18 +33,27 @@ class Validator {
         if (elFields[fieldName].required) {
             if (fieldValue === '') {
                 this.errors[fieldName].push('Polje je prazno')
+                field.classList.add('border-danger')
+            } else {
+                field.classList.remove('border-danger')
+                field.classList.add('border-success')
             }
         }
 
         if(elFields[fieldName].email) {
             if (!this.validateEmail(fieldValue)) {
                 this.errors[fieldName].push('Neispravna email adresa')
+                field.classList.add('border-danger')
+            } else {
+                field.classList.remove('border-danger')
+                field.classList.add('border-success')
             }
         }
 
         
         if (fieldValue.length < elFields[fieldName].minlength || fieldValue.length > elFields[fieldName].maxlength) {
-            this.errors[fieldName].push(`Pollje mora imati minimalno ${elFields[fieldName].minlength} i maksimalno ${elFields[fieldName].maxlength} karaktera`)
+            this.errors[fieldName].push(`Polje mora imati minimalno ${elFields[fieldName].minlength} i maksimalno ${elFields[fieldName].maxlength} karaktera`)
+            field.classList.add('border-danger')
         }
 
         if (elFields[fieldName].matching) {
@@ -54,10 +63,20 @@ class Validator {
                 this.errors[fieldName].push('Lozinke se ne poklapaju')
             }
 
+            if (fieldValue !== matchingEl.value || fieldValue.length < elFields[fieldName].minlength || fieldValue.length > elFields[fieldName].maxlength) {
+                field.classList.add('border-danger')
+                matchingEl.classList.add('border-danger')
+            } else {
+                field.classList.remove('border-danger')
+                field.classList.add('border-success')
+                matchingEl.classList.remove('border-danger')
+                matchingEl.classList.add('border-success')
+            }
+
             if (this.errors[fieldName].length === 0) {
                 this.errors[fieldName] = []
                 this.errors[elFields[fieldName].matching] = []
-            }
+            } 
         }
 
         this.populateErrors(this.errors)
@@ -66,7 +85,7 @@ class Validator {
     populateErrors(errors){
         for(const elem of document.querySelectorAll('ul')) {
             elem.remove()
-        }
+        } 
 
         for(let key of Object.keys(errors)) {
             let parentElement = document.querySelector(`input[name="${key}"]`).parentElement
@@ -78,6 +97,7 @@ class Validator {
                 li.innerText = error
 
                 child.appendChild(li)
+                li.classList.add('text-danger')
             });
         }
     }
